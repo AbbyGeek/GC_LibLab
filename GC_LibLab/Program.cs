@@ -31,7 +31,7 @@ namespace GC_LibLab
                 try
                 {
                     Console.WriteLine("Welcome to the Library. Please select one of the following options:");
-                    Console.WriteLine("1) List all books in the library \n2) Search for book by Author \n3) Search for book by Title Keyword \n4) Check book out \n5) Return Book \n6) Display list of checked in and checked out books \n");
+                    Console.WriteLine("1) List all books in the library \n2) Search for book by Author \n3) Search for book by Title Keyword \n4) Check book out \n5) Return Book \n6) Display list of checked in and checked out books \n7) Add book to library");
                     int function = int.Parse(Console.ReadLine());
 
                     if (function == 1)
@@ -58,12 +58,33 @@ namespace GC_LibLab
                     {
                         SortList(Books);
                     }
+                    if (function == 7)
+                    {
+                        AddBook(Books);
+                    }
                 }
-                catch{ Console.WriteLine("That is not a valid entry. Please choose again."); continue;}
+                catch { Console.WriteLine("That is not a valid entry. Please choose again."); continue; }
             }
         }
         public static void ListBooks(List<List<string>> Books)
         {
+            Console.WriteLine("Sort by:\n1) Title\n2) Author\n3) Genre");
+            string sortby = Console.ReadLine();
+            if ("title1".Contains(sortby.ToLower()))
+            {
+                Books = Books.OrderBy(x => x[0]).ToList();
+            }
+            if ("author2".Contains(sortby))
+            {
+                Books = Books.OrderBy(x => x[1]).ToList();
+            }
+            if ("genre3".Contains(sortby))
+            {
+                Books = Books.OrderBy(x => x[2]).ToList();
+            }
+
+
+
             Console.WriteLine("Title".PadRight(25) + "Author".PadRight(25) + "Genre".PadRight(25) + "Status".PadRight(25));
 
             for (int i = 0; i < Books.Count; i++)
@@ -131,7 +152,7 @@ namespace GC_LibLab
                     Console.WriteLine($"There are {count} books that match your search criteria\n");
 
                     Console.WriteLine("Would you like to \n1)Continue 2) Exit to main screen");
-                    int Cont = int.Parse(Console.ReadLine());
+                    string Cont = Console.ReadLine();
                     if (Cont == "1" || "continue".Contains(Cont)) { continue; }
                     if (Cont == "2" || "exit to main screen".Contains(Cont)) { break; }
                 }
@@ -185,7 +206,7 @@ namespace GC_LibLab
                         Console.WriteLine($"\nThere is {count} book that matches your search");
                         Console.WriteLine("Is this the book you would like to check out? \n1) Yes \n2) No");
                         string entry = Console.ReadLine();
-                        if (entry == "1" || "yes".Contains(entry.ToLower());
+                        if (entry == "1" || "yes".Contains(entry.ToLower()))
                         {
 
                             Books[x][3] = "Checked Out";
@@ -237,7 +258,7 @@ namespace GC_LibLab
                         Console.WriteLine($"\nThere is {count} book that matches your search");
                         Console.WriteLine("Is this the book you would like to check in? \n1) Yes \n2) No");
                         string entry = Console.ReadLine();
-                        if (entry == "1" || "yes".Contains(entry.ToLower());
+                        if (entry == "1" || "yes".Contains(entry.ToLower()))
                         {
                             if (DateTime.Parse(Books[x][4]) < DateTime.Now)
                             { Console.WriteLine("***BOOK IS LATE! INITIATE LATE FEE COLLECTION MODE!***"); }
@@ -287,6 +308,38 @@ namespace GC_LibLab
                 }
                 catch { Console.WriteLine("Invalid entry. Please try again"); continue; }
             }
+        }
+        public static void AddBook(List<List<string>> Books)
+        {
+            while (true)
+            {
+                try
+                {
+                    Console.WriteLine("Enter information for the new book:");
+                    Console.Write("Title: ");
+                    string title = Console.ReadLine();
+                    Console.Write("Author: ");
+                    string author = Console.ReadLine();
+                    Console.Write("Genre: ");
+                    string genre = Console.ReadLine();
+
+                    List<string> NewBook = new List<string> { title, author, genre, "Checked In" };
+                    Console.WriteLine($"\nYou new book is as follows: \nTitle: {title}\nAuthor: {author}\nGenre: {genre}\nStatus: Checked In\n\nIs everything correct? (y/n)");
+                    string cont = Console.ReadLine();
+                    if ("yes".Contains(cont.ToLower()))
+                    {
+                        Books.Add(NewBook);
+                        Console.WriteLine($"{title} has been added to the library");
+                    }
+                    Console.WriteLine("\n Would you like to: \n1) Continue adding books\n2)Exit to main menu");
+                    string again = Console.ReadLine();
+                    if (again == "1" || "continue adding books".Contains(cont)) { continue; }
+                    else { break;  }
+
+                }
+                catch { Console.WriteLine("Invalid Entry. Please try again."); continue; }
+            }
+
         }
     }
 }
